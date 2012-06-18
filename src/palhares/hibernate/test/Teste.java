@@ -2,8 +2,8 @@ package palhares.hibernate.test;
 
 import java.util.List;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -15,7 +15,8 @@ import palhares.hibernate.test.entity.State;
 
 public class Teste {
 	public static void main(String[] args) throws Exception {
-		BasicConfigurator.configure();
+		DOMConfigurator.configure("log4j.xml");
+
 		Logger.getLogger(Teste.class).info("Entering application.");
 
 		Configuration configuration = new Configuration()
@@ -34,9 +35,12 @@ public class Teste {
 		Session session = null;
 		try {
 			session = sessionFactory.openSession();
-			List<City> states = (List<City>) session.createCriteria(City.class).list();
-			for (City s : states) {
+			List<State> states = (List<State>) session.createCriteria(State.class).list();
+			for (State s : states) {
 				Logger.getLogger(Teste.class).info(s);
+				for (City c : s.getCities()) {
+					Logger.getLogger(Teste.class).info("\t" + c);
+				}
 			}
 		} finally {
 
